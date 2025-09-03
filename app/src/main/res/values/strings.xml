@@ -4,32 +4,40 @@
     <!-- Recipe Titles -->
     <string name="recipe_pasta_title">Creamy Garlic Pasta</string>
     <string name="recipe_pancakes_title">Fluffy Pancakes</string>
+    <string name="recipe_tacos_title">Classic Beef Tacos</string>
+    <string name="recipe_cookies_title">Chewy Chocolate Chip Cookies</string>
+    <string name="recipe_soup_title">Simple Tomato Soup</string>
+    <string name="recipe_guacamole_title">Classic Guacamole</string>
+    <string name="recipe_chicken_title">Lemon Herb Roast Chicken</string>
+    <string name="recipe_pizza_title">Margherita Pizza</string>
+    <string name="recipe_garlic_bread_title">Easy Garlic Bread</string>
+    <string name="recipe_salad_title">Simple Green Salad</string>
 
-    <!-- Recipe Instructions -->
-    <!-- Creamy Garlic Pasta Details -->
+
+    <!-- == Creamy Garlic Pasta Details == -->
     <string-array name="recipe_pasta_ingredients">
         <item>250g fettuccine pasta</item>
         <item>4 cloves garlic, minced</item>
         <item>2 tbsp butter</item>
         <item>1 cup heavy cream</item>
-        <item>1/2 cup grated Parmesan cheese</item>
+        <item>½ cup grated Parmesan cheese</item>
         <item>Fresh parsley, chopped</item>
     </string-array>
     <string-array name="recipe_pasta_steps">
         <item>Cook pasta according to package instructions.</item>
         <item>In a saucepan, melt butter over medium heat and sauté garlic for 1 minute until fragrant.</item>
-        <item>Stir in heavy cream and bring to a simmer. Cook for 2-3 minutes.</item>
+        <item>Stir in heavy cream and bring to a simmer. Cook for 2–3 minutes.</item>
         <item>Reduce heat, stir in Parmesan cheese until the sauce is smooth.</item>
         <item>Drain the pasta and toss it with the creamy garlic sauce. Garnish with parsley.</item>
     </string-array>
 
-    <!-- Fluffy Pancakes Details -->
+    <!-- == Fluffy Pancakes Details == -->
     <string-array name="recipe_pancakes_ingredients">
-        <item>1 1/2 cups all-purpose flour</item>
+        <item>1 ½ cups all-purpose flour</item>
         <item>2 tbsp sugar</item>
         <item>2 tsp baking powder</item>
-        <item>1/2 tsp salt</item>
-        <item>1 1/4 cups milk</item>
+        <item>½ tsp salt</item>
+        <item>1 ¼ cups milk</item>
         <item>1 large egg</item>
         <item>2 tbsp melted butter</item>
     </string-array>
@@ -38,9 +46,166 @@
         <item>In a separate bowl, whisk together milk and egg, then stir in the melted butter.</item>
         <item>Pour the wet ingredients into the dry ingredients and stir until just combined. Do not overmix.</item>
         <item>Heat a lightly oiled griddle or frying pan over medium-high heat.</item>
-        <item>Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.</item>
+        <item>Pour or scoop the batter onto the griddle, using approximately ¼ cup for each pancake.</item>
         <item>Cook until bubbles form and the edges are dry, then flip and cook until golden brown.</item>
     </string-array>
 
+    <!-- == Classic Beef Tacos Details == -->
+    <string-array name="recipe_tacos_ingredients">
+        <item>1 lb ground beef</item>
+        <item>1 packet taco seasoning</item>
+        <item>¾ cup water</item>
+        <item>12 hard taco shells</item>
+        <item>Shredded lettuce</item>
+        <item>Diced tomatoes</item>
+        <item>Shredded cheddar cheese</item>
+        <item>Sour cream</item>
+    </string-array>
+    <string-array name="recipe_tacos_steps">
+        <item>In a large skillet, cook ground beef over medium-high heat until no longer pink. Drain fat.</item>
+        <item>Stir in taco seasoning and water. Bring to a simmer and cook for 5 minutes, stirring occasionally, until sauce has thickened.</item>
+        <item>While the meat is cooking, heat taco shells according to package directions.</item>
+        <item>Spoon the beef mixture into the warm taco shells.</item>
+        <item>Top with lettuce, tomatoes, cheese, and sour cream as desired.</item>
+    </string-array>
 
+    <!-- == Chewy Chocolate Chip Cookies Details == -->
+    <string-array name="recipe_cookies_ingredients">
+        <item>2 ¼ cups all-purpose flour</item>
+        <item>1 tsp baking soda</item>
+        <item>½ tsp salt</item>
+        <item>1 cup (2 sticks) unsalted butter, softened</item>
+        <item>¾ cup granulated sugar</item>
+        <item>¾ cup packed brown sugar</item>
+        <item>1 tsp vanilla extract</item>
+        <item>2 large eggs</item>
+        <item>2 cups semi-sweet chocolate chips</item>
+    </string-array>
+    <string-array name="recipe_cookies_steps">
+        <item>Preheat oven to 375°F (190°C). Line baking sheets with parchment paper.</item>
+        <item>In a small bowl, whisk together flour, baking soda, and salt.</item>
+        <item>In a large bowl, beat the softened butter, granulated sugar, brown sugar, and vanilla extract with an electric mixer until creamy.</item>
+        <item>Add eggs, one at a time, beating well after each addition.</item>
+        <item>Gradually beat in the flour mixture until just combined. Stir in the chocolate chips.</item>
+        <item>Drop rounded tablespoons of dough onto the prepared baking sheets, about 2 inches apart.</item>
+        <item>Bake for 9 to 11 minutes, or until golden brown. Let cool on baking sheets for 2 minutes before transferring to wire racks to cool completely.</item>
+    </string-array>
+
+    <!-- == Simple Tomato Soup Details == -->
+    <string-array name="recipe_soup_ingredients">
+        <item>1 tbsp olive oil</item>
+        <item>1 large onion, chopped</item>
+        <item>2 cloves garlic, minced</item>
+        <item>1 (28 ounce) can crushed tomatoes</item>
+        <item>4 cups vegetable broth</item>
+        <item>1 tsp dried basil</item>
+        <item>Salt and pepper to taste</item>
+        <item>½ cup heavy cream (optional)</item>
+    </string-array>
+    <string-array name="recipe_soup_steps">
+        <item>Heat olive oil in a large pot or Dutch oven over medium heat.</item>
+        <item>Add chopped onion and cook until softened, about 5–7 minutes.</item>
+        <item>Stir in garlic and cook for another minute until fragrant.</item>
+        <item>Pour in the crushed tomatoes, vegetable broth, and basil. Season with salt and pepper.</item>
+        <item>Bring to a boil, then reduce heat and simmer for at least 20 minutes to allow flavors to meld.</item>
+        <item>If using, stir in the heavy cream before serving. For a smoother soup, use an immersion blender.</item>
+    </string-array>
+
+    <!-- == Classic Guacamole Details == -->
+    <string-array name="recipe_guacamole_ingredients">
+        <item>3 ripe avocados</item>
+        <item>½ red onion, finely chopped</item>
+        <item>1–2 serrano chiles, minced</item>
+        <item>¼ cup fresh cilantro, chopped</item>
+        <item>1 lime, juiced</item>
+        <item>½ tsp salt</item>
+    </string-array>
+    <string-array name="recipe_guacamole_steps">
+        <item>Halve the avocados, remove the pits, and scoop the flesh into a medium bowl.</item>
+        <item>Mash the avocado with a fork to your desired consistency (chunky or smooth).</item>
+        <item>Stir in the chopped onion, chiles, cilantro, lime juice, and salt.</item>
+        <item>Taste and adjust seasoning if necessary. Add more lime juice or salt as needed.</item>
+        <item>Serve immediately with tortilla chips.</item>
+    </string-array>
+
+    <!-- == Lemon Herb Roast Chicken Details == -->
+    <string-array name="recipe_chicken_ingredients">
+        <item>1 (3–4 lb) whole chicken</item>
+        <item>1 lemon, halved</item>
+        <item>4 sprigs fresh rosemary</item>
+        <item>4 sprigs fresh thyme</item>
+        <item>1 head of garlic, cut in half crosswise</item>
+        <item>2 tbsp olive oil</item>
+        <item>Salt and freshly ground black pepper</item>
+    </string-array>
+    <string-array name="recipe_chicken_steps">
+        <item>Preheat oven to 425°F (220°C).</item>
+        <item>Pat the chicken dry with paper towels. Season generously inside and out with salt and pepper.</item>
+        <item>Stuff the cavity of the chicken with the lemon halves, rosemary, thyme, and garlic head.</item>
+        <item>Truss the chicken legs together with kitchen twine.</item>
+        <item>Rub the outside of the chicken with olive oil.</item>
+        <item>Place the chicken in a roasting pan and roast for 1 hour to 1 hour 15 minutes, or until the juices run clear.</item>
+        <item>Let the chicken rest for 10–15 minutes before carving.</item>
+    </string-array>
+
+    <!-- == Margherita Pizza Details == -->
+    <string-array name="recipe_pizza_ingredients">
+        <item>1 lb pizza dough, store-bought or homemade</item>
+        <item>½ cup pizza sauce or crushed tomatoes</item>
+        <item>8 oz fresh mozzarella cheese, sliced</item>
+        <item>¼ cup fresh basil leaves</item>
+        <item>2 tbsp olive oil</item>
+        <item>Salt to taste</item>
+    </string-array>
+    <string-array name="recipe_pizza_steps">
+        <item>Preheat your oven to its highest setting, typically 500–550°F (260–290°C), with a pizza stone or steel inside if you have one.</item>
+        <item>On a lightly floured surface, stretch or roll out the pizza dough to your desired thickness.</item>
+        <item>Transfer the dough to a piece of parchment paper.</item>
+        <item>Spread the pizza sauce evenly over the dough, leaving a small border for the crust.</item>
+        <item>Arrange the mozzarella slices on top of the sauce. Drizzle with olive oil and sprinkle with salt.</item>
+        <item>Carefully slide the pizza (on the parchment) onto the preheated pizza stone or a baking sheet.</item>
+        <item>Bake for 8–12 minutes, or until the crust is golden and the cheese is bubbly and slightly browned.</item>
+        <item>Top with fresh basil leaves before serving.</item>
+    </string-array>
+
+    <!-- == Easy Garlic Bread Details == -->
+    <string-array name="recipe_garlic_bread_ingredients">
+        <item>1 loaf of French bread or baguette</item>
+        <item>½ cup (1 stick) unsalted butter, softened</item>
+        <item>4 cloves garlic, minced</item>
+        <item>2 tbsp fresh parsley, chopped</item>
+        <item>¼ tsp salt</item>
+    </string-array>
+    <string-array name="recipe_garlic_bread_steps">
+        <item>Preheat oven to 375°F (190°C).</item>
+        <item>Slice the loaf of bread in half lengthwise.</item>
+        <item>In a small bowl, mix together the softened butter, minced garlic, chopped parsley, and salt until well combined.</item>
+        <item>Spread the garlic butter mixture evenly over both cut sides of the bread.</item>
+        <item>Place the bread halves on a baking sheet, buttered side up.</item>
+        <item>Bake for 10–12 minutes, or until the butter is melted and the edges are golden brown.</item>
+        <item>For crispier bread, you can broil for the last 1–2 minutes, watching carefully to prevent burning.</item>
+        <item>Slice and serve warm.</item>
+    </string-array>
+
+    <!-- == Simple Green Salad Details == -->
+    <string-array name="recipe_salad_ingredients">
+        <item>1 head of romaine lettuce, washed and chopped</item>
+        <item>1 cucumber, sliced</item>
+        <item>1 cup cherry tomatoes, halved</item>
+        <item>½ red onion, thinly sliced</item>
+        <item>For the vinaigrette:</item>
+        <item>3 tbsp extra virgin olive oil</item>
+        <item>1 tbsp red wine vinegar</item>
+        <item>1 tsp Dijon mustard</item>
+        <item>Salt and pepper to taste</item>
+    </string-array>
+    <string-array name="recipe_salad_steps">
+        <item>In a large salad bowl, combine the chopped lettuce, cucumber, cherry tomatoes, and red onion.</item>
+        <item>To make the vinaigrette, whisk together the olive oil, red wine vinegar, and Dijon mustard in a small bowl.</item>
+        <item>Season the vinaigrette with salt and pepper to your liking.</item>
+        <item>Pour the vinaigrette over the salad just before serving.</item>
+        <item>Toss gently to combine all ingredients.</item>
+        <item>Serve immediately as a side or a light main course.</item>
+    </string-array>
 </resources>
+
