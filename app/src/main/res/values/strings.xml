@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Flavour Files</string>
+
+    <!-- Recipe Titles -->
+    <string name="recipe_pasta_title">Creamy Garlic Pasta</string>
+    <string name="recipe_pancakes_title">Fluffy Pancakes</string>
 </resources>
