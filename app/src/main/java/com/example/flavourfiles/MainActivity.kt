@@ -18,29 +18,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.flavourfiles.ui.theme.FlavourFilesTheme
+import com.example.compose.AppTheme
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 
 data class Recipe (
     val id: Int,
@@ -68,9 +68,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FlavourFilesTheme {
+            AppTheme (dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     App()
                 }
@@ -167,14 +168,35 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
 
     if (recipe != null) {
         Column {
-            Text(text="Ingredients")
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                text = stringResource(recipe.title),
+//                fontSize = 40.sp,
+                lineHeight = 40.sp,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                text = "Ingredients",
+//                fontSize = 40.sp
+            )
             val ingredients = stringArrayResource(id = recipe.ingredients)
 
             ingredients.forEach { ingredient ->
                 Text(text = "• $ingredient")
             }
 
-            Text(text="Method")
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                text = "Method",
+//                fontSize = 40.sp
+            )
 
             val method = stringArrayResource(id = recipe.method)
 
@@ -182,14 +204,20 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
                 Text(text = "• $step")
             }
 
-            Button(onClick = onNextScreen) {
-                Text("Go to home screen")
+            ElevatedButton(onClick = onNextScreen,
+//                shape = RoundedCornerShape(30.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color(0xff2175c4),
+//                    contentColor = Color.DarkGray
+//                ),
+                ) {
+                Text("Back to all recipes")
             }
         }
     } else {
         Column {
             Text("Recipe not found (id=$id)")
-            Button(onClick = onNextScreen) {
+            ElevatedButton(onClick = onNextScreen) {
                 Text("Go back")
             }
         }
@@ -199,7 +227,7 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun FlavourFilesPreview() {
-    FlavourFilesTheme {
+    AppTheme(dynamicColor = false) {
         App()
     }
 }
