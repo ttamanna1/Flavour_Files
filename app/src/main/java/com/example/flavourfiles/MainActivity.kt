@@ -1,15 +1,22 @@
 package com.example.flavourfiles
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +36,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 
 data class Recipe (
     val id: Int,
@@ -38,8 +51,18 @@ data class Recipe (
     val method: Int
 )
 
-val recipes = listOf(Recipe(1,R.string.recipe_pasta_title, R.drawable.pasta_flavour_files, R.array.recipe_pasta_ingredients, R.array.recipe_pasta_steps),
-    Recipe(2,R.string.recipe_pancakes_title, R.drawable.pancakes_flavour_files, R.array.recipe_pancakes_ingredients, R.array.recipe_pancakes_steps))
+val recipes = listOf(
+    Recipe(1, R.string.recipe_pasta_title, R.drawable.pasta_flavour_files, R.array.recipe_pasta_ingredients, R.array.recipe_pasta_steps),
+    Recipe(2, R.string.recipe_pancakes_title, R.drawable.pancakes_flavour_files, R.array.recipe_pancakes_ingredients, R.array.recipe_pancakes_steps),
+    Recipe(3, R.string.recipe_tacos_title, R.drawable.tacos, R.array.recipe_tacos_ingredients, R.array.recipe_tacos_steps),
+    Recipe(4, R.string.recipe_cookies_title, R.drawable.cookies, R.array.recipe_cookies_ingredients, R.array.recipe_cookies_steps),
+    Recipe(5, R.string.recipe_soup_title, R.drawable.soup, R.array.recipe_soup_ingredients, R.array.recipe_soup_steps),
+    Recipe(6, R.string.recipe_guacamole_title, R.drawable.guacamole, R.array.recipe_guacamole_ingredients, R.array.recipe_guacamole_steps),
+    Recipe(7, R.string.recipe_chicken_title, R.drawable.chicken, R.array.recipe_chicken_ingredients, R.array.recipe_chicken_steps),
+    Recipe(8, R.string.recipe_pizza_title, R.drawable.pizza, R.array.recipe_pizza_ingredients, R.array.recipe_pizza_steps),
+    Recipe(9, R.string.recipe_garlic_bread_title, R.drawable.garlic_bread, R.array.recipe_garlic_bread_ingredients, R.array.recipe_garlic_bread_steps),
+    Recipe(10, R.string.recipe_salad_title, R.drawable.salad, R.array.recipe_salad_ingredients, R.array.recipe_salad_steps)
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,31 +112,50 @@ fun App() {
 
 @Composable
 fun HomeScreen(onRecipeClick: (Int) -> Unit) {
-    Column {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(36.dp),
-            text = "Flavour Files",
-//            fontSize = 80.sp
-        )
-        recipes.forEach { recipe ->
-            Card(
+    LazyColumn (
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ){
+        item {
+            Box(
                 modifier = Modifier
-                    .clickable { onRecipeClick(recipe.id) }
+                    .fillMaxWidth()
+                    .padding( 34.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = stringResource(id = recipe.title),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
+                    text = "Flavour\n Files",
+                    fontSize = 60.sp,
+                    lineHeight = 70.sp,
+                    textAlign = TextAlign.Center
                 )
-                Image(
-                    painter = painterResource(id = recipe.image),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            }
+        }
+        items(recipes) { recipe ->
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onRecipeClick(recipe.id) }
+            ) {
+                Column {
+                    Text(
+                        text = stringResource(id = recipe.title),
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    )
+                    Image(
+                        painter = painterResource(id = recipe.image),
+                        contentDescription = stringResource(id = recipe.title),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        contentScale = ContentScale.Crop
+
+                    )
+                }
             }
         }
     }
