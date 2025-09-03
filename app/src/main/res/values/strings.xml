@@ -4,4 +4,43 @@
     <!-- Recipe Titles -->
     <string name="recipe_pasta_title">Creamy Garlic Pasta</string>
     <string name="recipe_pancakes_title">Fluffy Pancakes</string>
+
+    <!-- Recipe Instructions -->
+    <!-- Creamy Garlic Pasta Details -->
+    <string-array name="recipe_pasta_ingredients">
+        <item>250g fettuccine pasta</item>
+        <item>4 cloves garlic, minced</item>
+        <item>2 tbsp butter</item>
+        <item>1 cup heavy cream</item>
+        <item>1/2 cup grated Parmesan cheese</item>
+        <item>Fresh parsley, chopped</item>
+    </string-array>
+    <string-array name="recipe_pasta_steps">
+        <item>Cook pasta according to package instructions.</item>
+        <item>In a saucepan, melt butter over medium heat and sauté garlic for 1 minute until fragrant.</item>
+        <item>Stir in heavy cream and bring to a simmer. Cook for 2-3 minutes.</item>
+        <item>Reduce heat, stir in Parmesan cheese until the sauce is smooth.</item>
+        <item>Drain the pasta and toss it with the creamy garlic sauce. Garnish with parsley.</item>
+    </string-array>
+
+    <!-- Fluffy Pancakes Details -->
+    <string-array name="recipe_pancakes_ingredients">
+        <item>1 1/2 cups all-purpose flour</item>
+        <item>2 tbsp sugar</item>
+        <item>2 tsp baking powder</item>
+        <item>1/2 tsp salt</item>
+        <item>1 1/4 cups milk</item>
+        <item>1 large egg</item>
+        <item>2 tbsp melted butter</item>
+    </string-array>
+    <string-array name="recipe_pancakes_steps">
+        <item>In a large bowl, whisk together flour, sugar, baking powder, and salt.</item>
+        <item>In a separate bowl, whisk together milk and egg, then stir in the melted butter.</item>
+        <item>Pour the wet ingredients into the dry ingredients and stir until just combined. Do not overmix.</item>
+        <item>Heat a lightly oiled griddle or frying pan over medium-high heat.</item>
+        <item>Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake.</item>
+        <item>Cook until bubbles form and the edges are dry, then flip and cook until golden brown.</item>
+    </string-array>
+
+
 </resources>
