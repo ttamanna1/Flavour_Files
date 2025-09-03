@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -89,29 +91,35 @@ fun App() {
 fun HomeScreen(onRecipeClick: (Int) -> Unit) {
     Column {
         Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Flavour Files"
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(36.dp),
+            text = "Flavour Files",
+            fontSize = 80.sp
         )
         recipes.forEach { recipe ->
-            Text(
-                text = stringResource(id = recipe.title),
-                style = MaterialTheme.typography.titleLarge,
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {onRecipeClick(recipe.id)}
-                    .padding(8.dp)
-            )
-            Image(
-                painter = painterResource(id = recipe.image),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth()
-            )
+                    .clickable { onRecipeClick(recipe.id) }
+            ) {
+                Text(
+                    text = stringResource(id = recipe.title),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+                Image(
+                    painter = painterResource(id = recipe.image),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
-//        Button(onClick = onNextScreen as () -> Unit) {
-//            Text("Go to details screen")
-//        }
     }
 }
+
+
 
 @Composable
 fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
