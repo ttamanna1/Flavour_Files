@@ -97,9 +97,6 @@ fun App(
     val navController = rememberNavController()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-//    var instructionsClicked by remember { mutableStateOf(false) }
-//    var methodClicked by remember { mutableStateOf(false) }
-
     NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "home") {
@@ -118,7 +115,11 @@ fun App(
                 DetailsScreen(
                     id = id,
                     isFavorite = uiState.favoriteRecipes.contains(id),
+                    instructionsClicked = uiState.instructionsClicked,
+                    methodClicked = uiState.methodClicked,
                     onToggleFavorite = { viewModel.toggleFavorite(id) },
+                    toggleInstructions = { viewModel.toggleInstructions()},
+                    toggleMethods = { viewModel.toggleMethods()},
                     onGoBack = { navController.popBackStack() }
                     )
             } else {
@@ -207,12 +208,16 @@ fun DetailsScreen(
     id: Int,
     onGoBack: () -> Unit,
     isFavorite: Boolean,
-    onToggleFavorite: () -> Unit
+    instructionsClicked: Boolean,
+    methodClicked: Boolean,
+    onToggleFavorite: () -> Unit,
+    toggleInstructions: () -> Unit,
+    toggleMethods: () -> Unit
 ) {
     val recipe = recipes.find { it.id == id }
 
-    var instructionsClicked by remember { mutableStateOf(false) }
-    var methodClicked by remember { mutableStateOf(false) }
+//    var instructionsClicked by remember { mutableStateOf(false) }
+//    var methodClicked by remember { mutableStateOf(false) }
 
     if (recipe != null) {
         LazyColumn {
@@ -249,7 +254,7 @@ fun DetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .clickable(onClick = { instructionsClicked = !instructionsClicked }),
+                        .clickable(onClick = toggleInstructions),
                     text = "Ingredients",
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
@@ -266,7 +271,7 @@ fun DetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .clickable(onClick = { methodClicked = !methodClicked }),
+                        .clickable(onClick = toggleMethods),
                     text = "Method",
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
