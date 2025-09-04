@@ -1,7 +1,6 @@
 package com.example.flavourfiles
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,15 +15,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -36,12 +41,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 
 data class Recipe (
     val id: Int,
@@ -85,13 +84,13 @@ class MainActivity : ComponentActivity() {
 fun App() {
 
     val navController = rememberNavController()
+    var instructionsClicked by remember { mutableStateOf(false) }
+    var methodClicked by remember { mutableStateOf(false) }
 
     NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "home") {
-            HomeScreen(
-                { id -> navController.navigate("details/$id") }
-            )
+            HomeScreen { id -> navController.navigate("details/$id") }
         }
 
         composable(route = "details/{id}") { backStackEntry ->
@@ -99,7 +98,7 @@ fun App() {
             val id = idString?.toIntOrNull()
 
             if (id != null) {
-                DetailsScreen(id = id) {
+                DetailsScreen(instructionsClicked, onInstructionsClickedChange = {instructionsClicked = !it}, methodClicked, onMethodClickedChange = {methodClicked = !it}, id = id) {
                     navController.navigate("home")
                 }
             } else {
@@ -168,8 +167,14 @@ fun HomeScreen(onRecipeClick: (Int) -> Unit) {
 
 
 @Composable
-fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
+fun DetailsScreen(    instructionsClicked: Boolean,
+                      onInstructionsClickedChange: (Boolean) -> Unit,
+                      methodClicked: Boolean,
+                      onMethodClickedChange: (Boolean) -> Unit,
+                      id: Int,
+                      onNextScreen: () -> Unit) {
     val recipe = recipes.find { it.id == id }
+
 
     if (recipe != null) {
         LazyColumn {
@@ -198,23 +203,25 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable(onClick = {onInstructionsClickedChange(instructionsClicked)}),
                     text = "Ingredients",
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
                 )
                 val ingredients = stringArrayResource(id = recipe.ingredients)
 
-                ingredients.forEach { ingredient ->
+                if (instructionsClicked) {ingredients.forEach { ingredient ->
                     Text(text = "• $ingredient")
                 }
-            }
+            }}
 
             item {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable(onClick = {onMethodClickedChange(methodClicked)}),
                     text = "Method",
                     style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center
@@ -222,10 +229,10 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
 
                 val method = stringArrayResource(id = recipe.method)
 
-                method.forEach { step ->
+                if (methodClicked) {method.forEach { step ->
                     Text(text = "• $step")
                 }
-            }
+            }}
 
             item {
                 Column(
