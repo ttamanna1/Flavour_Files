@@ -37,8 +37,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -86,11 +96,23 @@ fun App() {
 
     val navController = rememberNavController()
 
+    var favoriteRecipes by remember { mutableStateOf(setOf<Int>()) }
+
+    val onToggleFavorite = { recipe: Int ->
+        favoriteRecipes = if (favoriteRecipes.contains(recipe)) {
+            favoriteRecipes - recipe
+        } else {
+            favoriteRecipes + recipe
+        }
+    }
+
     NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "home") {
             HomeScreen(
-                { id -> navController.navigate("details/$id") }
+                favoriteRecipes = favoriteRecipes,
+                onToggleFavorite = onToggleFavorite,
+                onRecipeClick = { id -> navController.navigate("details/$id") }
             )
         }
 
@@ -99,19 +121,25 @@ fun App() {
             val id = idString?.toIntOrNull()
 
             if (id != null) {
-                DetailsScreen(id = id) {
-                    navController.navigate("home")
-                }
+                DetailsScreen(
+                    id = id,
+                    isFavorite = favoriteRecipes.contains(id),
+                    onToggleFavorite = { onToggleFavorite(id) },
+                    onGoBack = { navController.popBackStack() }
+                    )
             } else {
-                // Handle the error case: maybe go back or show an error message
-                navController.navigate("home") // or a fallback screen
+                navController.popBackStack()
             }
         }
     }
 }
 
 @Composable
-fun HomeScreen(onRecipeClick: (Int) -> Unit) {
+fun HomeScreen(
+    onRecipeClick: (Int) -> Unit,
+    favoriteRecipes: Set<Int>,
+    onToggleFavorite: (Int) -> Unit
+    ) {
     LazyColumn (
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -159,6 +187,16 @@ fun HomeScreen(onRecipeClick: (Int) -> Unit) {
                         contentScale = ContentScale.Crop
 
                     )
+                    IconButton(
+                        onClick = { onToggleFavorite(recipe.id) },
+                        modifier = Modifier
+                    ) {
+                        Icon(
+                            imageVector = if (favoriteRecipes.contains(recipe.id)) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = if (favoriteRecipes.contains(recipe.id)) Color.Red else Color.White
+                        )
+                    }
                 }
             }
         }
@@ -168,7 +206,12 @@ fun HomeScreen(onRecipeClick: (Int) -> Unit) {
 
 
 @Composable
-fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
+fun DetailsScreen(
+    id: Int,
+    onGoBack: () -> Unit,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
+) {
     val recipe = recipes.find { it.id == id }
 
     if (recipe != null) {
@@ -193,6 +236,13 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
                         .height(300.dp),
                     contentScale = ContentScale.Crop
                 )
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
             item {
                 Text(
@@ -232,7 +282,7 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ElevatedButton(onClick = onNextScreen) {
+                    ElevatedButton(onClick = onGoBack) {
                         Text("Back to all recipes")
                     }
                 }
@@ -244,7 +294,7 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
                 Text("Recipe not found (id=$id)")
             }
             item {
-                ElevatedButton(onClick = onNextScreen) {
+                ElevatedButton(onClick = onGoBack) {
                     Text("Go back")
                 }
             }
