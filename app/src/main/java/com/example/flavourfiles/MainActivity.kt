@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -50,15 +49,14 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import com.example.ui.theme.libertinusFamily
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 data class Recipe (
     val id: Int,
@@ -99,28 +97,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App() {
+fun App(
+    viewModel: FlavourFilesViewModel = viewModel()
+) {
 
     val navController = rememberNavController()
-    var instructionsClicked by remember { mutableStateOf(false) }
-    var methodClicked by remember { mutableStateOf(false) }
-
-    var favoriteRecipes by remember { mutableStateOf(setOf<Int>()) }
-
-    val onToggleFavorite = { recipe: Int ->
-        favoriteRecipes = if (favoriteRecipes.contains(recipe)) {
-            favoriteRecipes - recipe
-        } else {
-            favoriteRecipes + recipe
-        }
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     NavHost(navController = navController, startDestination = "home") {
 
         composable(route = "home") {
             HomeScreen(
-                favoriteRecipes = favoriteRecipes,
-                onToggleFavorite = onToggleFavorite,
+                favoriteRecipes = uiState.favoriteRecipes,
+                onToggleFavorite = {recipe -> viewModel.toggleFavorite(recipe) },
                 onRecipeClick = { id -> navController.navigate("details/$id") }
             )
         }
@@ -131,13 +120,13 @@ fun App() {
 
             if (id != null) {
                 DetailsScreen(
-                    instructionsClicked,
-                    onInstructionsClickedChange = {instructionsClicked = !it},
-                    methodClicked,
-                    onMethodClickedChange = {methodClicked = !it},
                     id = id,
-                    isFavorite = favoriteRecipes.contains(id),
-                    onToggleFavorite = { onToggleFavorite(id) },
+                    isFavorite = uiState.favoriteRecipes.contains(id),
+                    instructionsClicked = uiState.instructionsClicked,
+                    methodClicked = uiState.methodClicked,
+                    onToggleFavorite = { viewModel.toggleFavorite(id) },
+                    toggleInstructions = { viewModel.toggleInstructions()},
+                    toggleMethods = { viewModel.toggleMethods()},
                     onGoBack = { navController.popBackStack() }
                     )
             } else {
@@ -200,24 +189,27 @@ fun HomeScreen(
                         fontFamily = libertinusFamily,
                         fontWeight = FontWeight.Normal
                     )
-                    Image(
-                        painter = painterResource(id = recipe.image),
-                        contentDescription = stringResource(id = recipe.title),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp),
-                        contentScale = ContentScale.Crop
+                    Box {
+                        Image(
+                            painter = painterResource(id = recipe.image),
+                            contentDescription = stringResource(id = recipe.title),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentScale = ContentScale.Crop
 
-                    )
-                    IconButton(
-                        onClick = { onToggleFavorite(recipe.id) },
-                        modifier = Modifier
-                    ) {
-                        Icon(
-                            imageVector = if (favoriteRecipes.contains(recipe.id)) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = "Favorite",
-                            tint = if (favoriteRecipes.contains(recipe.id)) Color.Red else Color.White
                         )
+                        IconButton(
+                            onClick = { onToggleFavorite(recipe.id) },
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                        ) {
+                            Icon(
+                                imageVector = if (favoriteRecipes.contains(recipe.id)) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                contentDescription = "Favorite",
+                                tint = if (favoriteRecipes.contains(recipe.id)) Color.Red else Color.White
+                            )
+                        }
                     }
                 }
             }
@@ -228,16 +220,20 @@ fun HomeScreen(
 
 
 @Composable
-fun DetailsScreen(    instructionsClicked: Boolean,
-                      onInstructionsClickedChange: (Boolean) -> Unit,
-                      methodClicked: Boolean,
-                      onMethodClickedChange: (Boolean) -> Unit,
-                      id: Int,
-                      onGoBack: () -> Unit,
-                      isFavorite: Boolean,
-                      onToggleFavorite: () -> Unit
+fun DetailsScreen(
+    id: Int,
+    onGoBack: () -> Unit,
+    isFavorite: Boolean,
+    instructionsClicked: Boolean,
+    methodClicked: Boolean,
+    onToggleFavorite: () -> Unit,
+    toggleInstructions: () -> Unit,
+    toggleMethods: () -> Unit
 ) {
     val recipe = recipes.find { it.id == id }
+
+//    var instructionsClicked by remember { mutableStateOf(false) }
+//    var methodClicked by remember { mutableStateOf(false) }
 
     if (recipe != null) {
         LazyColumn {
@@ -298,7 +294,7 @@ fun DetailsScreen(    instructionsClicked: Boolean,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .clickable(onClick = {onInstructionsClickedChange(instructionsClicked)}),
+                        .clickable(onClick = toggleInstructions),
                     text = "Ingredients",
                     fontSize = 35.sp,
                     textAlign = TextAlign.Center,
@@ -317,7 +313,7 @@ fun DetailsScreen(    instructionsClicked: Boolean,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .clickable(onClick = {onMethodClickedChange(methodClicked)}),
+                        .clickable(onClick = toggleMethods),
                     text = "Method",
                     fontSize = 35.sp,
                     textAlign = TextAlign.Center,
