@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
             AppTheme (dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     App()
                 }
@@ -134,7 +135,10 @@ fun HomeScreen(onRecipeClick: (Int) -> Unit) {
             ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onRecipeClick(recipe.id) }
+                    .clickable { onRecipeClick(recipe.id) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             ) {
                 Column {
                     Text(
@@ -143,7 +147,8 @@ fun HomeScreen(onRecipeClick: (Int) -> Unit) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer
                     )
                     Image(
                         painter = painterResource(id = recipe.image),
@@ -167,58 +172,81 @@ fun DetailsScreen(id: Int, onNextScreen: () -> Unit) {
     val recipe = recipes.find { it.id == id }
 
     if (recipe != null) {
-        Column {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                text = stringResource(recipe.title),
+        LazyColumn {
+            item{
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    text = stringResource(recipe.title),
 //                fontSize = 40.sp,
-                lineHeight = 40.sp,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = "Ingredients",
-//                fontSize = 40.sp
-            )
-            val ingredients = stringArrayResource(id = recipe.ingredients)
+                    lineHeight = 40.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+            item {
+                Image(
+                    painter = painterResource(id = recipe.image),
+                    contentDescription = stringResource(id = recipe.title),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    text = "Ingredients",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
+                )
+                val ingredients = stringArrayResource(id = recipe.ingredients)
 
-            ingredients.forEach { ingredient ->
-                Text(text = "• $ingredient")
+                ingredients.forEach { ingredient ->
+                    Text(text = "• $ingredient")
+                }
             }
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                text = "Method",
-//                fontSize = 40.sp
-            )
+            item {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    text = "Method",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
+                )
 
-            val method = stringArrayResource(id = recipe.method)
+                val method = stringArrayResource(id = recipe.method)
 
-            method.forEach { step ->
-                Text(text = "• $step")
+                method.forEach { step ->
+                    Text(text = "• $step")
+                }
             }
 
-            ElevatedButton(onClick = onNextScreen,
-//                shape = RoundedCornerShape(30.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color(0xff2175c4),
-//                    contentColor = Color.DarkGray
-//                ),
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                Text("Back to all recipes")
+                    ElevatedButton(onClick = onNextScreen) {
+                        Text("Back to all recipes")
+                    }
+                }
             }
         }
     } else {
-        Column {
-            Text("Recipe not found (id=$id)")
-            ElevatedButton(onClick = onNextScreen) {
-                Text("Go back")
+        LazyColumn {
+            item {
+                Text("Recipe not found (id=$id)")
+            }
+            item {
+                ElevatedButton(onClick = onNextScreen) {
+                    Text("Go back")
+                }
             }
         }
     }
