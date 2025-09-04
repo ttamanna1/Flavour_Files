@@ -5,11 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,7 +56,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import com.example.ui.theme.libertinusFamily
 
 data class Recipe (
     val id: Int,
@@ -154,17 +158,24 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
         item {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( 34.dp),
-                contentAlignment = Alignment.Center
+                    .padding( 20.dp)
             ) {
+                Image(
+                    painter = painterResource(R.drawable.flavour_files_logo_no_words),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(100.dp)
+                )
                 Text(
-                    text = "Flavour\n Files",
-                    fontSize = 60.sp,
-                    lineHeight = 70.sp,
-                    textAlign = TextAlign.Center
+                    text = "Flavour Files",
+                    fontSize = 30.sp,
+                    lineHeight = 45.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = libertinusFamily,
+                    fontWeight = FontWeight.Light
                 )
             }
         }
@@ -180,12 +191,14 @@ fun HomeScreen(
                 Column {
                     Text(
                         text = stringResource(id = recipe.title),
-                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 40.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal
                     )
                     Image(
                         painter = painterResource(id = recipe.image),
@@ -228,15 +241,39 @@ fun DetailsScreen(    instructionsClicked: Boolean,
 
     if (recipe != null) {
         LazyColumn {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top=15.dp, bottom=0.dp)
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.flavour_files_logo_no_words),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(50.dp)
+                    )
+                    Text(
+                        text = "Flavour Files",
+                        fontSize = 25.sp,
+                        lineHeight = 45.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+            }
             item{
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
+                        .padding(top=0.dp,bottom=20.dp),
                     text = stringResource(recipe.title),
-//                fontSize = 40.sp,
-                    lineHeight = 40.sp,
-                    textAlign = TextAlign.Center
+                    fontSize = 40.sp,
+                    lineHeight = 45.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = libertinusFamily,
+                    fontWeight = FontWeight.Normal
                 )
             }
             item {
@@ -263,8 +300,10 @@ fun DetailsScreen(    instructionsClicked: Boolean,
                         .padding(10.dp)
                         .clickable(onClick = {onInstructionsClickedChange(instructionsClicked)}),
                     text = "Ingredients",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
+                    fontSize = 35.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = libertinusFamily,
+                    fontWeight = FontWeight.Normal
                 )
                 val ingredients = stringArrayResource(id = recipe.ingredients)
 
@@ -280,8 +319,10 @@ fun DetailsScreen(    instructionsClicked: Boolean,
                         .padding(10.dp)
                         .clickable(onClick = {onMethodClickedChange(methodClicked)}),
                     text = "Method",
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
+                    fontSize = 35.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = libertinusFamily,
+                    fontWeight = FontWeight.Normal
                 )
 
                 val method = stringArrayResource(id = recipe.method)
