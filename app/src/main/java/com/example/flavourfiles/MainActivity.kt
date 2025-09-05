@@ -57,7 +57,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
@@ -123,8 +129,11 @@ fun App(
             HomeScreen(
                 favoriteRecipes = uiState.favoriteRecipes,
                 onToggleFavorite = {recipe -> viewModel.toggleFavorite(recipe) },
-                onRecipeClick = { id -> navController.navigate("details/$id") }
-            )
+                onRecipeClick = { id -> navController.navigate("details/$id") },
+                search = uiState.search,
+                onSearchChange = { search -> viewModel.updateSearch(search) },
+
+                )
         }
 
         composable(route = "details/{id}") { backStackEntry ->
@@ -156,8 +165,15 @@ fun App(
 fun HomeScreen(
     onRecipeClick: (Int) -> Unit,
     favoriteRecipes: Set<Int>,
-    onToggleFavorite: (Int) -> Unit
+    onToggleFavorite: (Int) -> Unit,
+    search: String,
+    onSearchChange: (String) -> Unit,
     ) {
+
+    val filteredRecipes = recipes.filter { recipe ->
+        stringResource(id = recipe.title).contains(search, ignoreCase = true)
+    }
+
     LazyColumn (
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -184,7 +200,36 @@ fun HomeScreen(
                 )
             }
         }
-        items(recipes) { recipe ->
+
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ElevatedButton(
+                    onClick = {
+                        val randomRecipe = recipes.random()
+                        onRecipeClick(randomRecipe.id)
+                    },
+                ) {
+                    Text("Surprise Me!")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        item {
+            TextField(
+                value = search,
+                onValueChange = { search -> onSearchChange(search) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Search recipes...") },
+                singleLine = true,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        items(filteredRecipes) { recipe ->
             ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()

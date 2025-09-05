@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.update
 data class UiState(
     val favoriteRecipes: Set<Int> = setOf(),
     val ingredientsClicked: Boolean = false,
-    val methodClicked: Boolean = false
+    val methodClicked: Boolean = false,
+    val search: String = ""
 )
 
 class FlavourFilesViewModel : ViewModel() {
@@ -42,5 +43,9 @@ class FlavourFilesViewModel : ViewModel() {
 
     fun resetExpandState() {
         _uiState.update { it.copy(ingredientsClicked = false, methodClicked = false) }
+    }
+
+    fun updateSearch(search: String) {
+        _uiState.update { it.copy(search = search) }
     }
 }
