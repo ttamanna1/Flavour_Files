@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,9 +32,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -49,18 +48,23 @@ import com.example.compose.AppTheme
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import com.example.ui.theme.libertinusFamily
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -122,6 +126,9 @@ fun App(
         }
 
         composable(route = "details/{id}") { backStackEntry ->
+            LaunchedEffect(Unit) {
+                viewModel.resetExpandState()
+            }
             val idString = backStackEntry.arguments?.getString("id")
             val id = idString?.toIntOrNull()
 
@@ -129,10 +136,10 @@ fun App(
                 DetailsScreen(
                     id = id,
                     isFavorite = uiState.favoriteRecipes.contains(id),
-                    instructionsClicked = uiState.instructionsClicked,
+                    ingredientsClicked = uiState.ingredientsClicked,
                     methodClicked = uiState.methodClicked,
                     onToggleFavorite = { viewModel.toggleFavorite(id) },
-                    toggleInstructions = { viewModel.toggleInstructions()},
+                    toggleIngredients = { viewModel.toggleIngredients()},
                     toggleMethods = { viewModel.toggleMethods()},
                     onGoBack = { navController.popBackStack() }
                     )
@@ -231,16 +238,13 @@ fun DetailsScreen(
     id: Int,
     onGoBack: () -> Unit,
     isFavorite: Boolean,
-    instructionsClicked: Boolean,
+    ingredientsClicked: Boolean,
     methodClicked: Boolean,
     onToggleFavorite: () -> Unit,
-    toggleInstructions: () -> Unit,
+    toggleIngredients: () -> Unit,
     toggleMethods: () -> Unit
 ) {
     val recipe = recipes.find { it.id == id }
-
-//    var instructionsClicked by remember { mutableStateOf(false) }
-//    var methodClicked by remember { mutableStateOf(false) }
 
     if (recipe != null) {
         LazyColumn {
@@ -294,20 +298,27 @@ fun DetailsScreen(
                 }
             }
             item {
-                Image(
-                    painter = painterResource(id = recipe.image),
-                    contentDescription = stringResource(id = recipe.title),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
-                    contentScale = ContentScale.Crop
-                )
-                IconButton(onClick = onToggleFavorite) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = if (isFavorite) Color.Red else MaterialTheme.colorScheme.onSurface
+                Box {
+                    Image(
+                        painter = painterResource(id = recipe.image),
+                        contentDescription = stringResource(id = recipe.title),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp),
+                        contentScale = ContentScale.Crop
                     )
+
+                    IconButton(
+                        onClick = onToggleFavorite,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = if (isFavorite) Color.Red else Color.White
+                        )
+                    }
                 }
             }
             item {
@@ -337,6 +348,39 @@ fun DetailsScreen(
 
                 if (instructionsClicked) {ingredients.forEach { ingredient ->
                     Text(text = "• $ingredient")
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Column {
+                    val rotationAngle by animateFloatAsState(targetValue = if (ingredientsClicked) 180f else 0f, label = "ingredientsRotation")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = toggleIngredients)
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ){
+                        Text(
+                            text = "Ingredients",
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(1f)
+
+                        )
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Expand or collapse section",
+                            modifier = Modifier.rotate(rotationAngle)
+                        )
+                    }
+                    AnimatedVisibility(visible = ingredientsClicked) {
+                        Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
+                            val ingredients = stringArrayResource(id = recipe.ingredients)
+                            ingredients.forEach { ingredient ->
+                                Text(text = "• $ingredient", modifier = Modifier.padding(bottom = 4.dp))
+                            }
+                        }
+                    }
                 }
             }}
 
@@ -368,10 +412,43 @@ fun DetailsScreen(
 
                 if (methodClicked) {method.forEach { step ->
                     Text(text = "• $step")
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column {
+                    val rotationAngle by animateFloatAsState(targetValue = if (methodClicked) 180f else 0f, label = "methodRotation")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = toggleMethods)
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Method",
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Expand or collapse section",
+                            modifier = Modifier.rotate(rotationAngle)
+                        )
+                    }
+                    AnimatedVisibility(visible = methodClicked) {
+                        Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
+                            val method = stringArrayResource(id = recipe.method)
+                            method.forEachIndexed { index, step ->
+                                Text(text = "${index + 1}.  $step", modifier = Modifier.padding(bottom = 4.dp))
+                            }
+                        }
+                    }
                 }
             }}
 
             item {
+                Spacer(modifier = Modifier.height(30.dp))
+
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -380,6 +457,7 @@ fun DetailsScreen(
                         Text("Back to all recipes")
                     }
                 }
+                Spacer(modifier = Modifier.height(30.dp))
             }
         }
     } else {
