@@ -1,6 +1,5 @@
 package com.example.flavourfiles
 
-import androidx.compose.ui.text.font.FontFamily
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,57 +19,61 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.compose.AppTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
-import com.example.ui.theme.libertinusFamily
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.compose.AppTheme
+import com.example.ui.theme.libertinusFamily
 import kotlinx.coroutines.delay
 import java.text.BreakIterator
 import java.text.StringCharacterIterator
 
+// Constants for padding and font sizes
+private val TitleFontSize = 40.sp
+private val SectionTitleFontSize = 35.sp
+private val DefaultPadding = 16.dp
+
+
+// Data class to store all recipe information
 data class Recipe (
     val id: Int,
     val title: Int,
@@ -81,6 +82,7 @@ data class Recipe (
     val method: Int
 )
 
+// Adding all recipe items to recipes list - more can be added/changes made and these will be updated automatically in app
 val recipes = listOf(
     Recipe(1, R.string.recipe_pasta_title, R.drawable.pasta_flavour_files, R.array.recipe_pasta_ingredients, R.array.recipe_pasta_steps),
     Recipe(2, R.string.recipe_pancakes_title, R.drawable.pancakes_flavour_files, R.array.recipe_pancakes_ingredients, R.array.recipe_pancakes_steps),
@@ -94,12 +96,13 @@ val recipes = listOf(
     Recipe(10, R.string.recipe_salad_title, R.drawable.salad, R.array.recipe_salad_ingredients, R.array.recipe_salad_steps)
 )
 
+// Main activity of the app
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppTheme (dynamicColor = false) {
+            AppTheme(dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primaryContainer
@@ -111,6 +114,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// App composable containing navigation logic
 @Composable
 fun App(
     viewModel: FlavourFilesViewModel = viewModel()
@@ -127,9 +131,8 @@ fun App(
                 onToggleFavorite = {recipe -> viewModel.toggleFavorite(recipe) },
                 onRecipeClick = { id -> navController.navigate("details/$id") },
                 search = uiState.search,
-                onSearchChange = { search -> viewModel.updateSearch(search) },
-
-                )
+                onSearchChange = { search -> viewModel.updateSearch(search) }
+            )
         }
 
         composable(route = "details/{id}") { backStackEntry ->
@@ -146,16 +149,19 @@ fun App(
                     ingredientsClicked = uiState.ingredientsClicked,
                     methodClicked = uiState.methodClicked,
                     onToggleFavorite = { viewModel.toggleFavorite(id) },
-                    toggleIngredients = { viewModel.toggleIngredients()},
-                    toggleMethods = { viewModel.toggleMethods()},
+                    toggleIngredients = { viewModel.toggleIngredients() },
+                    toggleMethods = { viewModel.toggleMethods() },
                     onGoBack = { navController.popBackStack() }
-                    )
+                )
             } else {
                 navController.popBackStack()
             }
         }
     }
 }
+
+// Home Screen - scrollable recipe titles/images, search bar and "Surprise Me!"
+// button feature
 
 @Composable
 fun HomeScreen(
@@ -164,27 +170,26 @@ fun HomeScreen(
     onToggleFavorite: (Int) -> Unit,
     search: String,
     onSearchChange: (String) -> Unit,
-    ) {
+) {
 
     val filteredRecipes = recipes.filter { recipe ->
         stringResource(id = recipe.title).contains(search, ignoreCase = true)
     }
 
     LazyColumn (
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ){
+        contentPadding = PaddingValues(DefaultPadding),
+        verticalArrangement = Arrangement.spacedBy(DefaultPadding)
+    ) {
         item {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( 20.dp)
+                    .padding(DefaultPadding)
             ) {
                 Image(
                     painter = painterResource(R.drawable.flavour_files_logo_no_words),
                     contentDescription = null,
-                    modifier = Modifier
-                        .height(100.dp)
+                    modifier = Modifier.height(100.dp)
                 )
                 AnimatedText()
             }
@@ -199,11 +204,11 @@ fun HomeScreen(
                     onClick = {
                         val randomRecipe = recipes.random()
                         onRecipeClick(randomRecipe.id)
-                    },
+                    }
                 ) {
                     Text("Surprise Me!")
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(DefaultPadding))
             }
         }
 
@@ -215,7 +220,7 @@ fun HomeScreen(
                 placeholder = { Text("Search recipes...") },
                 singleLine = true,
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(DefaultPadding))
         }
 
         items(filteredRecipes) { recipe ->
@@ -230,7 +235,7 @@ fun HomeScreen(
                 Column {
                     Text(
                         text = stringResource(id = recipe.title),
-                        fontSize = 40.sp,
+                        fontSize = TitleFontSize,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -247,19 +252,12 @@ fun HomeScreen(
                                 .fillMaxWidth()
                                 .height(150.dp),
                             contentScale = ContentScale.Crop
-
                         )
-                        IconButton(
+                        FavoriteIconButton(
+                            isFavorite = favoriteRecipes.contains(recipe.id),
                             onClick = { onToggleFavorite(recipe.id) },
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                        ) {
-                            Icon(
-                                imageVector = if (favoriteRecipes.contains(recipe.id)) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Favorite",
-                                tint = if (favoriteRecipes.contains(recipe.id)) Color.Red else Color.White
-                            )
-                        }
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        )
                     }
                 }
             }
@@ -267,8 +265,23 @@ fun HomeScreen(
     }
 }
 
+// Favorite Icon Button
+@Composable
+fun FavoriteIconButton(
+    isFavorite: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+            contentDescription = "Favorite",
+            tint = if (isFavorite) Color.Red else Color.White
+        )
+    }
+}
 
-
+// Details Screen - recipe title/image and expandable ingredients/method sections
 @Composable
 fun DetailsScreen(
     id: Int,
@@ -283,12 +296,16 @@ fun DetailsScreen(
     val recipe = recipes.find { it.id == id }
 
     if (recipe != null) {
+
+        val ingredients = stringArrayResource(id = recipe.ingredients).toList()
+        val steps = stringArrayResource(id = recipe.method).toList()
+
         LazyColumn {
             item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top=25.dp, bottom=0.dp)
+                        .padding(top = 25.dp, bottom = 0.dp)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.flavour_files_logo_no_words),
@@ -303,26 +320,25 @@ fun DetailsScreen(
                         lineHeight = 30.sp,
                         fontWeight = FontWeight.Light,
                         loop = false,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
+
             item {
-                Divider(
+                HorizontalDivider(
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     thickness = 1.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp, horizontal = 25.dp) // spacing above and below the line
+                        .padding(vertical = 16.dp, horizontal = 25.dp)
                 )
             }
-            item{
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.Center)
-                        .padding(bottom=10.dp)
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = stringResource(recipe.title),
@@ -330,112 +346,63 @@ fun DetailsScreen(
                         lineHeight = 40.sp,
                         textAlign = TextAlign.Center,
                         fontFamily = libertinusFamily,
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-            }
-            item {
-                Box {
-                    Image(
-                        painter = painterResource(id = recipe.image),
-                        contentDescription = stringResource(id = recipe.title),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    IconButton(
-                        onClick = onToggleFavorite,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                    ) {
-                        Icon(
-                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = "Favorite",
-                            tint = if (isFavorite) Color.Red else Color.White
-                        )
-                    }
-                }
-            }
-            item {
-                Spacer(modifier = Modifier.height(30.dp))
-
-                Column {
-                    val rotationAngle by animateFloatAsState(targetValue = if (ingredientsClicked) 180f else 0f, label = "ingredientsRotation")
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = toggleIngredients)
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ){
-                        Text(
-                            text = "Ingredients",
-                            fontSize = 35.sp,
-                        fontFamily = libertinusFamily,
                         fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(1f)
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    Box {
+                        Image(
+                            painter = painterResource(id = recipe.image),
+                            contentDescription = stringResource(id = recipe.title),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            contentScale = ContentScale.Crop
                         )
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Expand or collapse section",
-                            modifier = Modifier.rotate(rotationAngle)
-                        )
-                    }
-                    AnimatedVisibility(visible = ingredientsClicked) {
-                        Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
-                            val ingredients = stringArrayResource(id = recipe.ingredients)
-                            ingredients.forEach { ingredient ->
-                                Text(text = "• $ingredient", modifier = Modifier.padding(bottom = 4.dp))
-                            }
+
+                        IconButton(
+                            onClick = onToggleFavorite,
+                            modifier = Modifier.align(Alignment.BottomEnd)
+                        ) {
+                            Icon(
+                                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                contentDescription = "Favorite",
+                                tint = if (isFavorite) Color.Red else Color.White
+                            )
                         }
                     }
                 }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(30.dp))
+            }
+
+            item {
+                IngredientsSection(
+                    ingredientsClicked = ingredientsClicked,
+                    toggleIngredients = toggleIngredients,
+                    ingredients = ingredients
+                )
             }
 
             item {
                 Spacer(modifier = Modifier.height(16.dp))
+            }
 
-                Column {
-                    val rotationAngle by animateFloatAsState(targetValue = if (methodClicked) 180f else 0f, label = "methodRotation")
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = toggleMethods)
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Method",
-                            fontSize = 35.sp,
-                            fontFamily = libertinusFamily,
-                            fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Expand or collapse section",
-                            modifier = Modifier.rotate(rotationAngle)
-                        )
-                    }
-                    AnimatedVisibility(visible = methodClicked) {
-                        Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
-                            val method = stringArrayResource(id = recipe.method)
-                            method.forEachIndexed { index, step ->
-                                Text(text = "${index + 1}.  $step", modifier = Modifier.padding(bottom = 4.dp))
-                            }
-                        }
-                    }
-                }
+            item {
+                MethodSection(
+                    methodClicked = methodClicked,
+                    toggleMethods = toggleMethods,
+                    steps = steps
+                )
             }
 
             item {
                 Spacer(modifier = Modifier.height(30.dp))
+            }
 
+            item {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -462,17 +429,116 @@ fun DetailsScreen(
         }
     }
 }
+// Ingredients Section
+@Composable
+fun IngredientsSection(
+    ingredientsClicked: Boolean,
+    toggleIngredients: () -> Unit,
+    ingredients: List<String>
+) {
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (ingredientsClicked) 180f else 0f,
+        label = "ingredientsRotation"
+    )
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = toggleIngredients)
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Ingredients",
+                fontSize = SectionTitleFontSize,
+                fontFamily = libertinusFamily,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = "Expand or collapse section",
+                modifier = Modifier.rotate(rotationAngle)
+            )
+        }
+
+        AnimatedVisibility(visible = ingredientsClicked) {
+            Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
+                ingredients.forEach { ingredient ->
+                    Text(
+                        text = "• $ingredient",
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        fontSize = 18.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Method Section
+@Composable
+fun MethodSection(
+    methodClicked: Boolean,
+    toggleMethods: () -> Unit,
+    steps: List<String>
+) {
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (methodClicked) 180f else 0f,
+        label = "methodRotation"
+    )
+
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = toggleMethods)
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Method",
+                fontSize = SectionTitleFontSize,
+                fontFamily = libertinusFamily,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = "Expand or collapse section",
+                modifier = Modifier.rotate(rotationAngle)
+            )
+        }
+
+        AnimatedVisibility(visible = methodClicked) {
+            Column(modifier = Modifier.padding(start = 16.dp, top = 8.dp)) {
+                steps.forEachIndexed { index, step ->
+                    Text(
+                        text = "${index + 1}. $step",
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        fontSize = 18.sp
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun AnimatedText(
+    modifier: Modifier = Modifier,
     text: String = "Flavour Files",
     fontSize: TextUnit = 30.sp,
     fontWeight: FontWeight = FontWeight.Light,
-    modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     fontFamily: FontFamily = libertinusFamily,
     lineHeight: TextUnit = 45.sp,
-    loop: Boolean = true // <- NEW parameter
+    loop: Boolean = true
 ) {
     val breakIterator = remember(text) { BreakIterator.getCharacterInstance() }
     val typingDelayInMs = 100L
