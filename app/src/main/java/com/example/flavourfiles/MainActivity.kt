@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,6 +53,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -252,21 +254,31 @@ fun DetailsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top=15.dp, bottom=0.dp)
+                        .padding(top=25.dp, bottom=0.dp)
                 ) {
                     Image(
                         painter = painterResource(R.drawable.flavour_files_logo_no_words),
                         contentDescription = null,
                         modifier = Modifier
                             .height(50.dp)
+                            .width(50.dp)
                     )
                     Text(
                         text = "Flavour Files",
-                        fontSize = 25.sp,
+                        fontSize =23.sp,
                         lineHeight = 45.sp,
                         textAlign = TextAlign.Center,
                         fontFamily = libertinusFamily,
-                        fontWeight = FontWeight.Light
+                        fontWeight = FontWeight.Light,
+                                modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+                            )
+                            .background(Color.White)
+                            .padding(horizontal = 16.dp, vertical = 2.dp)
                     )
                 }
             }
@@ -285,15 +297,15 @@ fun DetailsScreen(
                         textAlign = TextAlign.Center,
                         fontFamily = libertinusFamily,
                         fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(10.dp) // Match the clip shape
-                            )
-                            .background(Color.White)
-                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding inside the white box
+//                        modifier = Modifier
+//                            .clip(RoundedCornerShape(10.dp))
+//                            .border(
+//                                width = 2.dp,
+//                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+//                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+//                            )
+//                            .background(Color.White)
+//                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding inside the white box
                     )
                 }
             }
@@ -322,32 +334,6 @@ fun DetailsScreen(
                 }
             }
             item {
-                Box(modifier = Modifier
-                    .fillMaxSize() // Make Box fill the screen
-                    .wrapContentSize(Alignment.Center) // Center its content
-                    .padding(bottom=10.dp)){
-                    Text(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(10.dp) // Match the clip shape
-                            )
-                            .background(Color.White)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable(onClick = toggleInstructions),
-                        text = "Ingredients",
-                        fontSize = 35.sp,
-                        textAlign = TextAlign.Center,
-                        fontFamily = libertinusFamily,
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-                val ingredients = stringArrayResource(id = recipe.ingredients)
-
-                if (instructionsClicked) {ingredients.forEach { ingredient ->
-                    Text(text = "• $ingredient")
                 Spacer(modifier = Modifier.height(30.dp))
 
                 Column {
@@ -362,10 +348,11 @@ fun DetailsScreen(
                     ){
                         Text(
                             text = "Ingredients",
-                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 35.sp,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1f)
-
                         )
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
@@ -382,36 +369,9 @@ fun DetailsScreen(
                         }
                     }
                 }
-            }}
+            }
 
             item {
-                Box(modifier = Modifier
-                    .fillMaxSize() // Make Box fill the screen
-                    .wrapContentSize(Alignment.Center) // Center its content
-                    .padding(bottom=10.dp)){
-                    Text(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(10.dp) // Match the clip shape
-                            )
-                            .background(Color.White)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable(onClick = toggleMethods),
-                        text = "Method",
-                        fontSize = 35.sp,
-                        textAlign = TextAlign.Center,
-                        fontFamily = libertinusFamily,
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-
-                val method = stringArrayResource(id = recipe.method)
-
-                if (methodClicked) {method.forEach { step ->
-                    Text(text = "• $step")
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Column {
@@ -425,7 +385,9 @@ fun DetailsScreen(
                     ) {
                         Text(
                             text = "Method",
-                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 35.sp,
+                            fontFamily = libertinusFamily,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1f)
                         )
@@ -444,7 +406,7 @@ fun DetailsScreen(
                         }
                     }
                 }
-            }}
+            }
 
             item {
                 Spacer(modifier = Modifier.height(30.dp))
@@ -453,8 +415,21 @@ fun DetailsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ElevatedButton(onClick = onGoBack) {
-                        Text("Back to all recipes")
+                    ElevatedButton(
+                        onClick = onGoBack,
+                        shape = RoundedCornerShape(10.dp), // Rounded corners
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = Color.White // Match background
+                        ),
+                        modifier = Modifier
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    ) {
+                        Text("Back", fontSize = 30.sp,            fontFamily = libertinusFamily,
+                            fontWeight = FontWeight.Light)
                     }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
