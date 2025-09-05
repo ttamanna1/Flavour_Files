@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 
 data class UiState(
     val favoriteRecipes: Set<Int> = setOf(),
-    val instructionsClicked: Boolean = false,
+    val ingredientsClicked: Boolean = false,
     val methodClicked: Boolean = false
 )
 
@@ -31,12 +31,16 @@ class FlavourFilesViewModel : ViewModel() {
         }
     }
 
-    fun toggleInstructions() {
-        _uiState.update { it.copy( instructionsClicked = !it.instructionsClicked)
+    fun toggleIngredients() {
+        _uiState.update { it.copy( ingredientsClicked = !it.ingredientsClicked)
         }
     }
     fun toggleMethods() {
         _uiState.update { it.copy( methodClicked = !it.methodClicked)
         }
+    }
+
+    fun resetExpandState() {
+        _uiState.update { it.copy(ingredientsClicked = false, methodClicked = false) }
     }
 }
