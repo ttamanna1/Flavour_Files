@@ -6,16 +6,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
@@ -43,6 +47,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -50,7 +55,9 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import com.example.ui.theme.libertinusFamily
@@ -260,17 +267,31 @@ fun DetailsScreen(
                 }
             }
             item{
-                Text(
+                Spacer(modifier = Modifier.height(30.dp))
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top=0.dp,bottom=20.dp),
-                    text = stringResource(recipe.title),
-                    fontSize = 40.sp,
-                    lineHeight = 45.sp,
-                    textAlign = TextAlign.Center,
-                    fontFamily = libertinusFamily,
-                    fontWeight = FontWeight.Normal
-                )
+                        .fillMaxSize() // Make Box fill the screen
+                        .wrapContentSize(Alignment.Center) // Center its content
+                        .padding(bottom=10.dp)
+                ) {
+                    Text(
+                        text = stringResource(recipe.title),
+                        fontSize = 40.sp,
+                        lineHeight = 40.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+                            )
+                            .background(Color.White)
+                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding inside the white box
+                    )
+                }
             }
             item {
                 Image(
@@ -290,17 +311,28 @@ fun DetailsScreen(
                 }
             }
             item {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clickable(onClick = toggleInstructions),
-                    text = "Ingredients",
-                    fontSize = 35.sp,
-                    textAlign = TextAlign.Center,
-                    fontFamily = libertinusFamily,
-                    fontWeight = FontWeight.Normal
-                )
+                Box(modifier = Modifier
+                    .fillMaxSize() // Make Box fill the screen
+                    .wrapContentSize(Alignment.Center) // Center its content
+                    .padding(bottom=10.dp)){
+                    Text(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+                            )
+                            .background(Color.White)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clickable(onClick = toggleInstructions),
+                        text = "Ingredients",
+                        fontSize = 35.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal
+                    )
+                }
                 val ingredients = stringArrayResource(id = recipe.ingredients)
 
                 if (instructionsClicked) {ingredients.forEach { ingredient ->
@@ -309,17 +341,28 @@ fun DetailsScreen(
             }}
 
             item {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clickable(onClick = toggleMethods),
-                    text = "Method",
-                    fontSize = 35.sp,
-                    textAlign = TextAlign.Center,
-                    fontFamily = libertinusFamily,
-                    fontWeight = FontWeight.Normal
-                )
+                Box(modifier = Modifier
+                    .fillMaxSize() // Make Box fill the screen
+                    .wrapContentSize(Alignment.Center) // Center its content
+                    .padding(bottom=10.dp)){
+                    Text(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+                            )
+                            .background(Color.White)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .clickable(onClick = toggleMethods),
+                        text = "Method",
+                        fontSize = 35.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal
+                    )
+                }
 
                 val method = stringArrayResource(id = recipe.method)
 
