@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +20,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
@@ -41,17 +46,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
+import com.example.ui.theme.libertinusFamily
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -149,17 +163,24 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
         item {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( 34.dp),
-                contentAlignment = Alignment.Center
+                    .padding( 20.dp)
             ) {
+                Image(
+                    painter = painterResource(R.drawable.flavour_files_logo_no_words),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(100.dp)
+                )
                 Text(
-                    text = "Flavour\n Files",
-                    fontSize = 60.sp,
-                    lineHeight = 70.sp,
-                    textAlign = TextAlign.Center
+                    text = "Flavour Files",
+                    fontSize = 30.sp,
+                    lineHeight = 45.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = libertinusFamily,
+                    fontWeight = FontWeight.Light
                 )
             }
         }
@@ -175,12 +196,14 @@ fun HomeScreen(
                 Column {
                     Text(
                         text = stringResource(id = recipe.title),
-                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 40.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal
                     )
                     Box {
                         Image(
@@ -227,17 +250,65 @@ fun DetailsScreen(
 
     if (recipe != null) {
         LazyColumn {
-            item{
-                Text(
+            item {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
-                    text = stringResource(recipe.title),
-                    lineHeight = 40.sp,
-                    textAlign = TextAlign.Center
-                )
+                        .padding(top=25.dp, bottom=0.dp)
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.flavour_files_logo_no_words),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(50.dp)
+                    )
+                    Text(
+                        text = "Flavour Files",
+                        fontSize =23.sp,
+                        lineHeight = 45.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Light,
+                                modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+                            )
+                            .background(Color.White)
+                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                    )
+                }
             }
-
+            item{
+                Spacer(modifier = Modifier.height(30.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize() // Make Box fill the screen
+                        .wrapContentSize(Alignment.Center) // Center its content
+                        .padding(bottom=10.dp)
+                ) {
+                    Text(
+                        text = stringResource(recipe.title),
+                        fontSize = 40.sp,
+                        lineHeight = 40.sp,
+                        textAlign = TextAlign.Center,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal,
+//                        modifier = Modifier
+//                            .clip(RoundedCornerShape(10.dp))
+//                            .border(
+//                                width = 2.dp,
+//                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+//                                shape = RoundedCornerShape(10.dp) // Match the clip shape
+//                            )
+//                            .background(Color.White)
+//                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding inside the white box
+                    )
+                }
+            }
             item {
                 Box {
                     Image(
@@ -277,10 +348,11 @@ fun DetailsScreen(
                     ){
                         Text(
                             text = "Ingredients",
-                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 35.sp,
+                        fontFamily = libertinusFamily,
+                        fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1f)
-
                         )
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
@@ -299,7 +371,6 @@ fun DetailsScreen(
                 }
             }
 
-
             item {
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -314,7 +385,9 @@ fun DetailsScreen(
                     ) {
                         Text(
                             text = "Method",
-                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 35.sp,
+                            fontFamily = libertinusFamily,
+                            fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.weight(1f)
                         )
@@ -342,8 +415,21 @@ fun DetailsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ElevatedButton(onClick = onGoBack) {
-                        Text("Back to all recipes")
+                    ElevatedButton(
+                        onClick = onGoBack,
+                        shape = RoundedCornerShape(10.dp), // Rounded corners
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = Color.White // Match background
+                        ),
+                        modifier = Modifier
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    ) {
+                        Text("Back", fontSize = 30.sp,            fontFamily = libertinusFamily,
+                            fontWeight = FontWeight.Light)
                     }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
