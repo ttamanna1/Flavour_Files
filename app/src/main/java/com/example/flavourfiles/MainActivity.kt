@@ -1,5 +1,6 @@
 package com.example.flavourfiles
 
+import androidx.compose.ui.text.font.FontFamily
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -51,18 +52,26 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import com.example.ui.theme.libertinusFamily
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
+import java.text.BreakIterator
+import java.text.StringCharacterIterator
 
 data class Recipe (
     val id: Int,
@@ -177,14 +186,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .height(100.dp)
                 )
-                Text(
-                    text = "Flavour Files",
-                    fontSize = 30.sp,
-                    lineHeight = 45.sp,
-                    textAlign = TextAlign.Center,
-                    fontFamily = libertinusFamily,
-                    fontWeight = FontWeight.Light
-                )
+                AnimatedText()
             }
         }
 
@@ -295,31 +297,31 @@ fun DetailsScreen(
                             .height(50.dp)
                             .width(50.dp)
                     )
-                    Text(
+                    AnimatedText(
                         text = "Flavour Files",
-                        fontSize =23.sp,
-                        lineHeight = 45.sp,
-                        textAlign = TextAlign.Center,
-                        fontFamily = libertinusFamily,
+                        fontSize = 25.sp,
+                        lineHeight = 30.sp,
                         fontWeight = FontWeight.Light,
-                                modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(10.dp) // Match the clip shape
-                            )
-                            .background(Color.White)
-                            .padding(horizontal = 16.dp, vertical = 2.dp)
+                        loop = false,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
                     )
                 }
             }
+            item {
+                Divider(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    thickness = 1.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp, horizontal = 25.dp) // spacing above and below the line
+                )
+            }
             item{
-                Spacer(modifier = Modifier.height(30.dp))
                 Box(
                     modifier = Modifier
-                        .fillMaxSize() // Make Box fill the screen
-                        .wrapContentSize(Alignment.Center) // Center its content
+                        .fillMaxSize()
+                        .wrapContentSize(Alignment.Center)
                         .padding(bottom=10.dp)
                 ) {
                     Text(
@@ -328,16 +330,7 @@ fun DetailsScreen(
                         lineHeight = 40.sp,
                         textAlign = TextAlign.Center,
                         fontFamily = libertinusFamily,
-                        fontWeight = FontWeight.Normal,
-//                        modifier = Modifier
-//                            .clip(RoundedCornerShape(10.dp))
-//                            .border(
-//                                width = 2.dp,
-//                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-//                                shape = RoundedCornerShape(10.dp) // Match the clip shape
-//                            )
-//                            .background(Color.White)
-//                            .padding(horizontal = 16.dp, vertical = 8.dp) // Padding inside the white box
+                        fontWeight = FontWeight.Normal
                     )
                 }
             }
@@ -448,20 +441,9 @@ fun DetailsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     ElevatedButton(
-                        onClick = onGoBack,
-                        shape = RoundedCornerShape(10.dp), // Rounded corners
-                        colors = ButtonDefaults.elevatedButtonColors(
-                            containerColor = Color.White // Match background
-                        ),
-                        modifier = Modifier
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                shape = RoundedCornerShape(10.dp)
-                            )
+                        onClick = onGoBack
                     ) {
-                        Text("Back", fontSize = 30.sp,            fontFamily = libertinusFamily,
-                            fontWeight = FontWeight.Light)
+                        Text("Back to all recipes")
                     }
                 }
                 Spacer(modifier = Modifier.height(30.dp))
@@ -479,6 +461,53 @@ fun DetailsScreen(
             }
         }
     }
+}
+
+@Composable
+fun AnimatedText(
+    text: String = "Flavour Files",
+    fontSize: TextUnit = 30.sp,
+    fontWeight: FontWeight = FontWeight.Light,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Center,
+    fontFamily: FontFamily = libertinusFamily,
+    lineHeight: TextUnit = 45.sp,
+    loop: Boolean = true // <- NEW parameter
+) {
+    val breakIterator = remember(text) { BreakIterator.getCharacterInstance() }
+    val typingDelayInMs = 100L
+    val pauseBetweenLoops = 1000L
+
+    var substringText by remember { mutableStateOf("") }
+
+    LaunchedEffect(text, loop) {
+        do {
+            breakIterator.text = StringCharacterIterator(text)
+
+            var nextIndex = breakIterator.next()
+            while (nextIndex != BreakIterator.DONE) {
+                substringText = text.subSequence(0, nextIndex).toString()
+                nextIndex = breakIterator.next()
+                delay(typingDelayInMs)
+            }
+
+            if (loop) {
+                delay(pauseBetweenLoops)
+                substringText = ""
+            }
+
+        } while (loop)
+    }
+
+    Text(
+        text = substringText,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        lineHeight = lineHeight,
+        textAlign = textAlign,
+        fontFamily = fontFamily,
+        modifier = modifier
+    )
 }
 
 @Preview(showBackground = true)
